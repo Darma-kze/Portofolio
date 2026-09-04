@@ -1598,6 +1598,97 @@ footer p {
   display: block;
 }
 
+/* Clickable Video Hero Showcase */
+.video-hero-link {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.video-hero-link img {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+}
+
+.video-play-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.75) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  opacity: 0.95;
+  transition: all 0.4s ease;
+}
+
+.video-play-btn-pulse {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: #ff0000;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7), 0 10px 30px rgba(255, 0, 0, 0.5);
+  animation: playPulse 2s infinite;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.video-play-btn-pulse svg {
+  margin-left: 4px;
+}
+
+.video-play-text {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.5px;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 8px 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+@keyframes playPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7), 0 0 20px rgba(255, 0, 0, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 22px rgba(255, 0, 0, 0), 0 0 30px rgba(255, 0, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0), 0 0 20px rgba(255, 0, 0, 0.5);
+  }
+}
+
+.video-hero-link:hover img {
+  transform: scale(1.04);
+  filter: brightness(1.1);
+}
+
+.video-hero-link:hover .video-play-overlay {
+  opacity: 1;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+.video-hero-link:hover .video-play-btn-pulse {
+  transform: scale(1.15);
+  background: #ff1a1a;
+}
+
+.video-hero-link:hover .video-play-text {
+  background: #ff0000;
+  border-color: #ff0000;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+}
+
 /* Main Content Layout */
 .project-detail-layout {
   display: grid;
@@ -1826,6 +1917,12 @@ footer p {
   background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
   border-color: transparent;
   box-shadow: 0 4px 15px rgba(220, 39, 67, 0.4);
+}
+
+.sidebar-link-btn.btn-youtube:hover {
+  background: #ff0000;
+  border-color: #ff0000;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
 }
 
 /* Key Metrics Box */
