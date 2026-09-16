@@ -1689,6 +1689,130 @@ footer p {
   box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
 }
 
+/* Clickable Figma Hero Showcase */
+.figma-hero-link {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.figma-hero-link img {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+}
+
+.figma-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.25) 0%, rgba(15, 23, 42, 0.75) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.92;
+  transition: all 0.4s ease;
+}
+
+.figma-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(18, 18, 24, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 24px;
+  border-radius: 40px;
+  backdrop-filter: blur(12px);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(162, 89, 255, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.figma-hero-link:hover img {
+  transform: scale(1.03);
+  filter: brightness(1.05);
+}
+
+.figma-hero-link:hover .figma-hero-overlay {
+  opacity: 1;
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.85) 100%);
+}
+
+.figma-hero-link:hover .figma-hero-badge {
+  transform: translateY(-3px) scale(1.04);
+  background: rgba(26, 26, 36, 0.95);
+  border-color: #a259ff;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 30px rgba(162, 89, 255, 0.45);
+}
+
+/* Clickable GitHub Hero Showcase */
+.github-hero-link {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.github-hero-link img {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+}
+
+.github-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.25) 0%, rgba(15, 23, 42, 0.75) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.92;
+  transition: all 0.4s ease;
+}
+
+.github-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(18, 18, 24, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 24px;
+  border-radius: 40px;
+  backdrop-filter: blur(12px);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 240, 255, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.github-hero-badge svg:first-child {
+  color: #00f0ff;
+}
+
+.github-hero-link:hover img {
+  transform: scale(1.03);
+  filter: brightness(1.05);
+}
+
+.github-hero-link:hover .github-hero-overlay {
+  opacity: 1;
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.85) 100%);
+}
+
+.github-hero-link:hover .github-hero-badge {
+  transform: translateY(-3px) scale(1.04);
+  background: rgba(24, 28, 42, 0.95);
+  border-color: var(--secondary);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 240, 255, 0.4);
+}
+
 /* Main Content Layout */
 .project-detail-layout {
   display: grid;
@@ -1923,6 +2047,12 @@ footer p {
   background: #ff0000;
   border-color: #ff0000;
   box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+}
+
+.sidebar-link-btn.btn-figma:hover {
+  background: linear-gradient(135deg, #1e1e2e, #2d1b4e);
+  border-color: #a259ff;
+  box-shadow: 0 4px 15px rgba(162, 89, 255, 0.35);
 }
 
 /* Key Metrics Box */
