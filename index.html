@@ -882,12 +882,7 @@
           </div>
 
           <div class="glass-card contact-form-panel">
-            <form id="contact-form" action="https://formsubmit.co/darma.darma2506@gmail.com" method="POST">
-              <!-- FormSubmit Honeypot & Config -->
-              <input type="hidden" name="_captcha" value="false">
-              <input type="hidden" name="_template" value="table">
-              <input type="hidden" name="_subject" value="New Portfolio Message from DarmaDev Website">
-              
+            <form id="contact-form">
               <div class="form-group">
                 <label for="form-name">Your Name</label>
                 <input type="text" class="form-control" id="form-name" name="name" placeholder="John Doe" required>
@@ -900,17 +895,26 @@
 
               <div class="form-group">
                 <label for="form-message">Message</label>
-                <textarea class="form-control" id="form-message" name="message" placeholder="Hi! I want to collaborate on..."
+                <textarea class="form-control" id="form-message" name="message" placeholder="Hi Darma! I'd like to discuss a project..."
                   required></textarea>
               </div>
 
-              <button type="submit" class="submit-btn" id="form-submit-btn">
-                <span>Send Message</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-              </button>
+              <div class="form-actions-grid">
+                <button type="submit" class="submit-btn" id="form-submit-btn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                  <span>Send via Gmail</span>
+                </button>
+                <button type="button" class="btn btn-secondary btn-alt-email" id="form-mailto-btn" title="Open with default email app">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                  <span>Default Mail App</span>
+                </button>
+              </div>
 
               <div class="form-status" id="form-status"></div>
             </form>

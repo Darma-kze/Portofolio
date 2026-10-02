@@ -168,99 +168,105 @@ document.addEventListener('DOMContentLoaded', () => {
     skillsObserver.observe(bar);
   });
 
-  /* --- CONTACT FORM HANDLING (SMART HYBRID & FALLBACK INTEGRATION) --- */
+  /* --- CONTACT FORM HANDLING (ZERO-TOKEN DIRECT EMAIL INTEGRATION) --- */
   const contactForm = document.getElementById('contact-form');
-  const formSubmitBtn = document.getElementById('form-submit-btn');
+  const formMailtoBtn = document.getElementById('form-mailto-btn');
   const formStatus = document.getElementById('form-status');
 
-  if (contactForm && formSubmitBtn && formStatus) {
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const nameInput = document.getElementById('form-name');
-      const emailInput = document.getElementById('form-email');
-      const messageInput = document.getElementById('form-message');
+  const TARGET_EMAIL = 'darma.darma2506@gmail.com';
 
-      const name = nameInput ? nameInput.value.trim() : '';
-      const email = emailInput ? emailInput.value.trim() : '';
-      const message = messageInput ? messageInput.value.trim() : '';
+  function getFormData() {
+    const nameInput = document.getElementById('form-name');
+    const emailInput = document.getElementById('form-email');
+    const messageInput = document.getElementById('form-message');
 
-      if (!name || !email || !message) {
-        formStatus.textContent = 'Please complete all form fields.';
+    const name = nameInput ? nameInput.value.trim() : '';
+    const email = emailInput ? emailInput.value.trim() : '';
+    const message = messageInput ? messageInput.value.trim() : '';
+
+    if (!name || !email || !message) {
+      return null;
+    }
+
+    const subject = `[Portfolio Inquiry] Message from ${name}`;
+    const body = `Hi Darma,\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n\n---\nSent from DarmaDev Portfolio Contact Form`;
+
+    return { name, email, message, subject, body };
+  }
+
+  function dispatchEmail(mode) {
+    const data = getFormData();
+
+    if (!data) {
+      if (formStatus) {
+        formStatus.textContent = 'Please fill out all fields before sending.';
         formStatus.className = 'form-status error';
-        return;
       }
+      return;
+    }
 
-      // Update button state to sending
-      formSubmitBtn.disabled = true;
-      const btnText = formSubmitBtn.querySelector('span');
-      const originalText = btnText ? btnText.textContent : 'Send Message';
-      if (btnText) btnText.textContent = 'Sending...';
-      
+    if (formStatus) {
       formStatus.textContent = '';
       formStatus.className = 'form-status';
+    }
 
-      // Check if browsing as direct local HTML file (file://)
-      const isLocalFile = window.location.protocol === 'file:';
-
-      if (isLocalFile) {
-        // When running locally from file://, submit via standard POST to avoid browser file origin restrictions
-        formStatus.textContent = 'Submitting message to darma.darma2506@gmail.com...';
-        formStatus.className = 'form-status success';
-        
-        setTimeout(() => {
-          contactForm.submit();
-        }, 600);
-        return;
-      }
-
-      // When running on a web server (localhost, Live Server, GitHub Pages, Vercel, etc.)
-      const formData = new FormData(contactForm);
-
-      try {
-        const response = await fetch('https://formsubmit.co/ajax/darma.darma2506@gmail.com', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json'
-          },
-          body: formData
-        });
-
-        const data = await response.json();
-
-        if (response.ok && (data.success === 'true' || data.success === true)) {
-          // Success scenario via AJAX
-          formStatus.textContent = `Thank you, ${name}! Your message has been sent directly to darma.darma2506@gmail.com.`;
-          formStatus.className = 'form-status success';
-          contactForm.reset();
+    if (mode === 'gmail') {
+      // Direct Gmail Web Composer URL with pre-filled recipient, subject, and body
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(TARGET_EMAIL)}&su=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(data.body)}`;
+      
+      const newTab = window.open(gmailUrl, '_blank');
+      
+      if (formStatus) {
+        if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
+          // In case popups are blocked by browser, fallback to standard window location
+          window.location.href = `mailto:${TARGET_EMAIL}?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(data.body)}`;
+          formStatus.textContent = `✨ Opening email client to send message to ${TARGET_EMAIL}...`;
         } else {
-          // Fallback to standard form submission if AJAX response was rejected
-          console.warn('AJAX rejected, falling back to direct submit:', data);
-          contactForm.submit();
+          formStatus.textContent = `✨ Gmail tab opened! Your message is ready to send to ${TARGET_EMAIL}.`;
         }
-      } catch (error) {
-        // Fallback to standard form submission if network / CORS failed
-        console.warn('API error, falling back to form submit:', error);
-        contactForm.submit();
-      } finally {
-        setTimeout(() => {
-          formSubmitBtn.disabled = false;
-          if (btnText) btnText.textContent = originalText;
-        }, 4000);
-
-        // Clear message state after 7 seconds
-        setTimeout(() => {
-          formStatus.style.opacity = '0';
-          setTimeout(() => {
-            formStatus.className = 'form-status';
-            formStatus.textContent = '';
-            formStatus.style.opacity = '1';
-          }, 300);
-        }, 7000);
+        formStatus.className = 'form-status success';
       }
+    } else {
+      // Direct Default Mail Client (Outlook, Apple Mail, Thunderbird, etc.)
+      const mailtoUrl = `mailto:${TARGET_EMAIL}?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(data.body)}`;
+      window.location.href = mailtoUrl;
+
+      if (formStatus) {
+        formStatus.textContent = `✨ Launching your default mail app to send to ${TARGET_EMAIL}...`;
+        formStatus.className = 'form-status success';
+      }
+    }
+
+    // Clear feedback message after 7 seconds
+    setTimeout(() => {
+      if (formStatus) {
+        formStatus.style.opacity = '0';
+        setTimeout(() => {
+          formStatus.className = 'form-status';
+          formStatus.textContent = '';
+          formStatus.style.opacity = '1';
+        }, 300);
+      }
+    }, 7000);
+  }
+
+  if (contactForm) {
+    // Submit default triggers Gmail Web composer
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      dispatchEmail('gmail');
     });
+
+    // Secondary button triggers default desktop/mobile mail client
+    if (formMailtoBtn) {
+      formMailtoBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        dispatchEmail('mailto');
+      });
+    }
   }
 
 });
+
 
 
