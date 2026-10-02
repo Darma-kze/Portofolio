@@ -6,17 +6,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const navLinks = document.querySelectorAll('.nav-link');
 
   if (menuBtn && navBar) {
-    menuBtn.addEventListener('click', () => {
-      menuBtn.classList.toggle('active');
+    const toggleMenu = () => {
+      const isOpen = menuBtn.classList.toggle('active');
       navBar.classList.toggle('active');
+      document.body.classList.toggle('menu-open', isOpen);
+    };
+
+    const closeMenu = () => {
+      menuBtn.classList.remove('active');
+      navBar.classList.remove('active');
+      document.body.classList.remove('menu-open');
+    };
+
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMenu();
     });
 
     // Close menu when links are clicked
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
-        menuBtn.classList.remove('active');
-        navBar.classList.remove('active');
+        closeMenu();
       });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!navBar.contains(e.target) && !menuBtn.contains(e.target) && navBar.classList.contains('active')) {
+        closeMenu();
+      }
+    });
+
+    // Close menu on resize back to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768 && navBar.classList.contains('active')) {
+        closeMenu();
+      }
     });
   }
 
@@ -143,37 +168,87 @@ document.addEventListener('DOMContentLoaded', () => {
     skillsObserver.observe(bar);
   });
 
-  /* --- CONTACT FORM HANDLING --- */
+  /* --- CONTACT FORM HANDLING (SMART HYBRID & FALLBACK INTEGRATION) --- */
   const contactForm = document.getElementById('contact-form');
   const formSubmitBtn = document.getElementById('form-submit-btn');
   const formStatus = document.getElementById('form-status');
 
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+  if (contactForm && formSubmitBtn && formStatus) {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const name = document.getElementById('form-name').value;
-      const email = document.getElementById('form-email').value;
-      const message = document.getElementById('form-message').value;
+      const nameInput = document.getElementById('form-name');
+      const emailInput = document.getElementById('form-email');
+      const messageInput = document.getElementById('form-message');
 
-      // Update state to submitting
+      const name = nameInput ? nameInput.value.trim() : '';
+      const email = emailInput ? emailInput.value.trim() : '';
+      const message = messageInput ? messageInput.value.trim() : '';
+
+      if (!name || !email || !message) {
+        formStatus.textContent = 'Please complete all form fields.';
+        formStatus.className = 'form-status error';
+        return;
+      }
+
+      // Update button state to sending
       formSubmitBtn.disabled = true;
       const btnText = formSubmitBtn.querySelector('span');
-      const originalText = btnText.textContent;
-      btnText.textContent = 'Sending Message...';
+      const originalText = btnText ? btnText.textContent : 'Send Message';
+      if (btnText) btnText.textContent = 'Sending...';
       
-      // Simulate form processing time
-      setTimeout(() => {
-        // Success scenario
-        formStatus.textContent = `Thank you, ${name}! Your message has been sent successfully.`;
+      formStatus.textContent = '';
+      formStatus.className = 'form-status';
+
+      // Check if browsing as direct local HTML file (file://)
+      const isLocalFile = window.location.protocol === 'file:';
+
+      if (isLocalFile) {
+        // When running locally from file://, submit via standard POST to avoid browser file origin restrictions
+        formStatus.textContent = 'Submitting message to darma.darma2506@gmail.com...';
         formStatus.className = 'form-status success';
         
-        // Reset form
-        contactForm.reset();
-        formSubmitBtn.disabled = false;
-        btnText.textContent = originalText;
-        
-        // Clear message state after 5 seconds
+        setTimeout(() => {
+          contactForm.submit();
+        }, 600);
+        return;
+      }
+
+      // When running on a web server (localhost, Live Server, GitHub Pages, Vercel, etc.)
+      const formData = new FormData(contactForm);
+
+      try {
+        const response = await fetch('https://formsubmit.co/ajax/darma.darma2506@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json'
+          },
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok && (data.success === 'true' || data.success === true)) {
+          // Success scenario via AJAX
+          formStatus.textContent = `Thank you, ${name}! Your message has been sent directly to darma.darma2506@gmail.com.`;
+          formStatus.className = 'form-status success';
+          contactForm.reset();
+        } else {
+          // Fallback to standard form submission if AJAX response was rejected
+          console.warn('AJAX rejected, falling back to direct submit:', data);
+          contactForm.submit();
+        }
+      } catch (error) {
+        // Fallback to standard form submission if network / CORS failed
+        console.warn('API error, falling back to form submit:', error);
+        contactForm.submit();
+      } finally {
+        setTimeout(() => {
+          formSubmitBtn.disabled = false;
+          if (btnText) btnText.textContent = originalText;
+        }, 4000);
+
+        // Clear message state after 7 seconds
         setTimeout(() => {
           formStatus.style.opacity = '0';
           setTimeout(() => {
@@ -181,10 +256,11 @@ document.addEventListener('DOMContentLoaded', () => {
             formStatus.textContent = '';
             formStatus.style.opacity = '1';
           }, 300);
-        }, 5000);
-
-      }, 1500);
+        }, 7000);
+      }
     });
   }
 
 });
+
+

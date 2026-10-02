@@ -882,20 +882,25 @@
           </div>
 
           <div class="glass-card contact-form-panel">
-            <form id="contact-form">
+            <form id="contact-form" action="https://formsubmit.co/darma.darma2506@gmail.com" method="POST">
+              <!-- FormSubmit Honeypot & Config -->
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_subject" value="New Portfolio Message from DarmaDev Website">
+              
               <div class="form-group">
                 <label for="form-name">Your Name</label>
-                <input type="text" class="form-control" id="form-name" placeholder="John Doe" required>
+                <input type="text" class="form-control" id="form-name" name="name" placeholder="John Doe" required>
               </div>
 
               <div class="form-group">
                 <label for="form-email">Email Address</label>
-                <input type="email" class="form-control" id="form-email" placeholder="john@example.com" required>
+                <input type="email" class="form-control" id="form-email" name="email" placeholder="john@example.com" required>
               </div>
 
               <div class="form-group">
                 <label for="form-message">Message</label>
-                <textarea class="form-control" id="form-message" placeholder="Hi! I want to collaborate on..."
+                <textarea class="form-control" id="form-message" name="message" placeholder="Hi! I want to collaborate on..."
                   required></textarea>
               </div>
 
